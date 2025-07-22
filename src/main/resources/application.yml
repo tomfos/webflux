@@ -11,11 +11,7 @@ spring:
     base-url: http://localhost:9540
 
 server:
-  port: 8081
-
-springdoc:
-  swagger-ui:
-    path: /
+  port: 8089
 
 management:
   endpoints:

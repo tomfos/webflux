@@ -1,21 +1,22 @@
 services:
-  #  postgres:
-  #    image: postgres
-  #    container_name: postgresgrafana
-  #    restart: always
-  #    ports:
-  #      - '5432:5432'
-  #    environment:
-  #      POSTGRES_USER: postgres
-  #      POSTGRES_PASSWORD: postgres
-  #      POSTGRES_DB: grafanadb
 
-  #  adminer:
-  #    image: adminer
-  #    container_name: adminergrafana
-  #    restart: always
-  #    ports:
-  #      - 8080:8080
+  postgres:
+    image: postgres
+    container_name: postgres-webflux
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+  adminer:
+    image: adminer
+    container_name: adminer-webflux
+    restart: always
+    ports:
+      - 8080:8080
 
   #zipkin
   zipkin:
@@ -67,3 +68,18 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=root
       - GF_SECURITY_ADMIN_PASSWORD=root
+
+  produit-webflux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: produit-container-webflux
+    restart: always
+    ports:
+      - "8088:8089"  # Expose l'app sur localhost:8088
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/postgres
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: postgres
+    depends_on:
+      - postgres
