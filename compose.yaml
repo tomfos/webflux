@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
     container_name: postgres-webflux
-    restart: always
+    restart: unless-stopped
     ports:
       - '5432:5432'
     environment:
@@ -44,6 +44,8 @@ services:
       - ./docker/tempo/tempo-data:/tmp/tempo
     ports:
       - "3200:3200"
+      - "4318:4318"   # OTLP HTTP
+      - "4317:4317"   # OTLP gRPC
       - "9611:9411"
 
   #loki
@@ -77,6 +79,8 @@ services:
     restart: always
     ports:
       - "8088:8089"  # Expose l'app sur localhost:8088
+    volumes:
+      - ./logs:/app/logs  # Mount logs directory to host
     environment:
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/postgres
       SPRING_R2DBC_USERNAME: postgres

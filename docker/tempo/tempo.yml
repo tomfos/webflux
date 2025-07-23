@@ -4,10 +4,19 @@ server:
 
 distributor:
   receivers:
-    zipkin:
+    otlp:
+      protocols:
+        http:
+        grpc:
+
+compactor:
+  compaction:
+    block_retention: 48h
 
 storage:
   trace:
     backend: local
+    wal:
+      path: /tmp/tempo/wal
     local:
       path: /tmp/tempo/blocks
